@@ -45,6 +45,3 @@ echo "Step [5] Start replica db server..."
 docker exec -it db_replica_svc mysql -uroot -ppass123 -e "START REPLICA;"
 
 echo "Setup Replication DB Complete!"
-
-# Verify the replication status
-# docker exec -it db_replica_svc mysql -uroot -ppass123 -e "SHOW SLAVE STATUS\G"
