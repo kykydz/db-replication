@@ -7,7 +7,7 @@ services:
   db_master_svc:
     build:
       context: .
-      dockerfile: master.Dockerfile
+      dockerfile: master/master.Dockerfile
     container_name: db_master_svc
     restart: always
     environment:
@@ -27,7 +27,7 @@ services:
   db_replica_svc:
     build:
       context: .
-      dockerfile: replica.Dockerfile
+      dockerfile: replica/replica.Dockerfile
     container_name: db_replica_svc
     restart: always
     depends_on:
