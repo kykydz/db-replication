@@ -5,7 +5,9 @@ networks:
 
 services:
   db_master_svc:
-    image: mysql:8.0
+    build:
+      context: .
+      dockerfile: master.Dockerfile
     container_name: db_master_svc
     restart: always
     environment:
@@ -23,7 +25,9 @@ services:
           - db_network_master
 
   db_replica_svc:
-    image: mysql:8.0
+    build:
+      context: .
+      dockerfile: replica.Dockerfile
     container_name: db_replica_svc
     restart: always
     depends_on:
