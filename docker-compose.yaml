@@ -4,9 +4,9 @@ networks:
     driver: bridge
 
 services:
-  db_primary:
+  db_master_svc:
     image: mysql:8.0
-    container_name: mysql_primary
+    container_name: db_master_svc
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: pass123
@@ -16,43 +16,31 @@ services:
     ports:
       - '3306:3306'
     volumes:
-      - mysql_primary:/var/lib/mysql
-    command:
-      - mysqld
-      - --server-id=1
-      - --log-bin=mysql-bin
-      - --binlog-do-db=db_replication_dev
+      - db_master_volume:/var/lib/mysql
     networks:
       my_master_slave_mysql:
         aliases:
-          - db_primary
+          - db_network_master
 
-  db_secondary:
+  db_replica_svc:
     image: mysql:8.0
-    container_name: mysql_secondary
+    container_name: db_replica_svc
     restart: always
     depends_on:
-      - db_primary
+      - db_master_svc
     environment:
       MYSQL_ROOT_PASSWORD: pass123
       MYSQL_DATABASE: db_replication_dev
-      MYSQL_USER: piuw_dev
-      MYSQL_PASSWORD: zxcv123
-      MYSQL_REPLICATION_SOURCE: db_primary:3306
+      MYSQL_REPLICATION_SOURCE: db_master_svc:3306
     ports:
       - '3307:3306'
     volumes:
-      - mysql_secondary_data:/var/lib/mysql
-    command:
-      - mysqld
-      - --server-id=2
-      - --log-bin=mysql-bin
-      - --binlog-do-db=db_replication_dev
+      - db_replica_volume:/var/lib/mysql
     networks:
       my_master_slave_mysql:
         aliases:
-          - db_primary
+          - db_network_replica
 
 volumes:
-  mysql_primary:
-  mysql_secondary_data:
+  db_master_volume:
+  db_replica_volume:
